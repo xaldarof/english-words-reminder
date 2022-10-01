@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import xaldarof.dictionary.english.R
 import xaldarof.dictionary.english.data.AppDatabase
 
-class NewAppWidget : AppWidgetProvider() {
+class WordWidget : AppWidgetProvider() {
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("UnspecifiedImmutableFlag")
 
@@ -41,7 +41,7 @@ class NewAppWidget : AppWidgetProvider() {
                         "Кэш приложения пуст или поврежден)"
                     )
                 }
-                val intent = Intent(context, NewAppWidget::class.java)
+                val intent = Intent(context, WordWidget::class.java)
                 intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
                 val pendingIntent = PendingIntent.getBroadcast(

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name="uz.unical.programm.workmanager.worker.NewAppWidget"
+            android:name="uz.unical.programm.workmanager.worker.WordWidget"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

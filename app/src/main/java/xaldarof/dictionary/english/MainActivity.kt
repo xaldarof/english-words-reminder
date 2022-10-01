@@ -14,10 +14,11 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uz.unical.programm.workmanager.worker.MainWorker
+import uz.unical.programm.workmanager.worker.AppWorker
 import xaldarof.dictionary.english.data.AppDatabase
 import xaldarof.dictionary.english.databinding.ActivityMainBinding
 import xaldarof.dictionary.english.domain.WordEntity
+import xaldarof.dictionary.english.tools.clearTrash
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -57,11 +58,7 @@ class MainActivity : AppCompatActivity() {
                                     " - "
                                 )
 
-                                val withoutN = withoutBreak.replace("_n.", "").replace(">", ": ")
-                                    .replace("_фр.", "").replace("_а.", "").replace("_a.", "")
-                                    .replaceFirst("_бот.", "")
-                                    .replaceFirst("1.", "")
-                                    .replace("_жд.", "")
+                                val withoutN = withoutBreak.clearTrash()
 
                                 db.insertWord(
                                     WordEntity(
@@ -71,20 +68,23 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    CoroutineScope(Dispatchers.Main).launch {
-                        binding.progress.visibility = View.GONE
-                        binding.start.visibility = View.GONE
-                        binding.active.isVisible = true
-                        initWorker()
-                    }
                 }
+                updateViews()
             }.start()
         }
     }
 
+    private fun updateViews() {
+        lifecycleScope.launch {
+            binding.progress.visibility = View.GONE
+            binding.start.visibility = View.GONE
+            binding.active.isVisible = true
+            initWorker()
+        }
+    }
 
     private fun initWorker() {
-        val work = PeriodicWorkRequest.Builder(MainWorker::class.java, 30, TimeUnit.MINUTES)
+        val work = PeriodicWorkRequest.Builder(AppWorker::class.java, 30, TimeUnit.MINUTES)
             .build()
 
         workManager.enqueueUniquePeriodicWork("tag", ExistingPeriodicWorkPolicy.KEEP, work)

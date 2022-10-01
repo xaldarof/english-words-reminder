@@ -18,7 +18,7 @@ import xaldarof.dictionary.english.MainActivity
 import xaldarof.dictionary.english.R
 import xaldarof.dictionary.english.data.AppDatabase
 
-class MainWorker(private val context: Context, workerParameters: WorkerParameters) :
+class AppWorker(private val context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
 
 
