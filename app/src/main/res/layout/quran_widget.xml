@@ -14,16 +14,18 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
+        android:layout_gravity="center"
         android:layout_margin="12dp"
         android:background="@drawable/rounded_back"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:text="lpd"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/body"
@@ -32,8 +34,9 @@
         android:ellipsize="end"
         android:gravity="center"
         android:padding="8dp"
-        android:textColor="@color/white"
         android:textAlignment="center"
+        android:textColor="@color/white"
+        android:text="dalsp[dlaps["
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

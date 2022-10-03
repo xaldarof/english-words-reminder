@@ -1,5 +1,9 @@
 package xaldarof.dictionary.english
 
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,10 +18,11 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uz.unical.programm.workmanager.worker.AppWorker
+import xaldarof.dictionary.english.service.AppWorker
 import xaldarof.dictionary.english.data.AppDatabase
 import xaldarof.dictionary.english.databinding.ActivityMainBinding
 import xaldarof.dictionary.english.domain.WordEntity
+import xaldarof.dictionary.english.service.ActivityReceiver
 import xaldarof.dictionary.english.tools.clearTrash
 import java.util.concurrent.TimeUnit
 
@@ -38,8 +43,6 @@ class MainActivity : AppCompatActivity() {
             binding.start.isGone = db.getCount() > 0L
             binding.active.isVisible = db.getCount() > 0L
         }
-
-
         binding.start.setOnClickListener {
             binding.progress.visibility = View.VISIBLE
             binding.start.visibility = View.GONE
@@ -58,11 +61,9 @@ class MainActivity : AppCompatActivity() {
                                     " - "
                                 )
 
-                                val withoutN = withoutBreak.clearTrash()
-
                                 db.insertWord(
                                     WordEntity(
-                                        withoutN
+                                        withoutBreak, false
                                     )
                                 )
                             }

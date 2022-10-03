@@ -1,6 +1,8 @@
-package uz.unical.programm.workmanager.worker
+package xaldarof.dictionary.english.service
 
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.Notification.FLAG_AUTO_CANCEL
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 import xaldarof.dictionary.english.MainActivity
 import xaldarof.dictionary.english.R
 import xaldarof.dictionary.english.data.AppDatabase
+import xaldarof.dictionary.english.domain.UnSeenWordEntity
 
 class AppWorker(private val context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
@@ -29,7 +32,13 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
                 val db = AppDatabase.getDatabase(context)
 
                 if (db.getWordsDao().getCount() > 0) {
-                    showNotification(db.getWordsDao().getRandomWord().body)
+                    if (db.getWordsDao().getUnSeenWordsCount() > 0) {
+                        showNotification(db.getWordsDao().getRandomUnSeedWord().body)
+                    } else {
+                        db.getWordsDao()
+                            .insertToUnRead(UnSeenWordEntity(db.getWordsDao().getRandomWord().body))
+                        showNotification(db.getWordsDao().getRandomUnSeedWord().body)
+                    }
                 }
             }
 
@@ -42,6 +51,16 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("WrongConstant")
     private fun showNotification(body: String) {
+        val broadCastIntent = Intent(context, ActivityReceiver::class.java)
+        broadCastIntent.putExtra("seen", "seen")
+
+        val deletePendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            broadCastIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE or FLAG_AUTO_CANCEL
+        )
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "all_notifications"
@@ -63,13 +82,14 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
             applicationContext,
             0,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE or FLAG_AUTO_CANCEL
         )
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_baseline_emoji_emotions_24)
             .setContentTitle(body.split(" ")[0])
             .setContentText(body)
+            .addAction(android.R.drawable.sym_def_app_icon, "Я увидел", deletePendingIntent)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
         builder.setContentIntent(pendingIntent).setAutoCancel(true)

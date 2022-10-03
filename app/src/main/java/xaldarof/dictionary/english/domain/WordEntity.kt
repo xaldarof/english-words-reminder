@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "words_table")
 data class WordEntity(
     @PrimaryKey
-    val body: String
+    val body: String,
+    val userKnows: Boolean
 )

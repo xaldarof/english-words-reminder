@@ -1,4 +1,4 @@
-package uz.unical.programm.workmanager.worker
+package xaldarof.dictionary.english.service
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -6,7 +6,9 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
+import android.provider.CalendarContract
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
