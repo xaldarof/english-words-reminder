@@ -61,6 +61,16 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE or FLAG_AUTO_CANCEL
         )
 
+        val broadCastIntentKnow = Intent(context, ActivityReceiver::class.java)
+        broadCastIntentKnow.putExtra("know", "know")
+        broadCastIntentKnow.putExtra("body", body)
+
+        val deletePendingIntentKnow = PendingIntent.getBroadcast(
+            context,
+            0,
+            broadCastIntentKnow,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE or FLAG_AUTO_CANCEL
+        )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "all_notifications"
@@ -90,6 +100,7 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
             .setContentTitle(body.split(" ")[0])
             .setContentText(body)
             .addAction(android.R.drawable.sym_def_app_icon, "Я увидел", deletePendingIntent)
+            .addAction(android.R.drawable.sym_def_app_icon, "Я это знаю", deletePendingIntentKnow)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
         builder.setContentIntent(pendingIntent).setAutoCancel(true)

@@ -21,5 +21,17 @@ class ActivityReceiver : BroadcastReceiver() {
                 }
             }
         }
+
+        if (p1?.getStringExtra("know") == "know") {
+            if (p0 != null) {
+                val notificationManager =
+                    p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(123)
+                CoroutineScope(Dispatchers.IO).launch {
+                    AppDatabase.getDatabase(p0).getWordsDao()
+                        .updateKnow(p1.getStringExtra("body")!!)
+                }
+            }
+        }
     }
 }

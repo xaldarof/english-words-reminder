@@ -10,7 +10,7 @@ import xaldarof.dictionary.english.domain.WordEntity
 @Dao
 interface WordsDao {
 
-    @Query("SELECT * FROM words_table WHERE userKnows = 1 ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT * FROM words_table WHERE userKnows = 0 ORDER BY RANDOM() LIMIT 1")
     suspend fun getRandomWord(): WordEntity
 
 
