@@ -13,23 +13,23 @@ class ActivityReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
         if (p1?.getStringExtra("seen") == "seen") {
             if (p0 != null) {
-                val notificationManager =
-                    p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(123)
                 CoroutineScope(Dispatchers.IO).launch {
                     AppDatabase.getDatabase(p0).getWordsDao().clearUnSeenWords()
+                    val notificationManager =
+                        p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.cancel(123)
                 }
             }
         }
 
         if (p1?.getStringExtra("know") == "know") {
             if (p0 != null) {
-                val notificationManager =
-                    p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(123)
                 CoroutineScope(Dispatchers.IO).launch {
                     AppDatabase.getDatabase(p0).getWordsDao()
                         .updateKnow(p1.getStringExtra("body")!!)
+                    val notificationManager =
+                        p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.cancel(123)
                 }
             }
         }

@@ -35,8 +35,7 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
                     if (db.getWordsDao().getUnSeenWordsCount() > 0) {
                         showNotification(db.getWordsDao().getRandomUnSeedWord().body)
                     } else {
-                        db.getWordsDao()
-                            .insertToUnRead(UnSeenWordEntity(db.getWordsDao().getRandomWord().body))
+                        db.getWordsDao().insertToUnRead(UnSeenWordEntity(db.getWordsDao().getRandomWord().body))
                         showNotification(db.getWordsDao().getRandomUnSeedWord().body)
                     }
                 }
@@ -67,7 +66,7 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
 
         val deletePendingIntentKnow = PendingIntent.getBroadcast(
             context,
-            0,
+            1,
             broadCastIntentKnow,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE or FLAG_AUTO_CANCEL
         )

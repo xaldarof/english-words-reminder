@@ -1,9 +1,5 @@
 package xaldarof.dictionary.english
 
-import android.content.BroadcastReceiver
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -18,12 +14,10 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import xaldarof.dictionary.english.service.AppWorker
 import xaldarof.dictionary.english.data.AppDatabase
 import xaldarof.dictionary.english.databinding.ActivityMainBinding
 import xaldarof.dictionary.english.domain.WordEntity
-import xaldarof.dictionary.english.service.ActivityReceiver
-import xaldarof.dictionary.english.tools.clearTrash
+import xaldarof.dictionary.english.service.AppWorker
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(binding.root)
         val db = AppDatabase.getDatabase(this@MainActivity).getWordsDao()
+
+
+        workManager.cancelAllWork();
+        initWorker()
 
         lifecycleScope.launch {
             binding.start.isGone = db.getCount() > 0L
