@@ -33,10 +33,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         val db = AppDatabase.getDatabase(this@MainActivity).getWordsDao()
 
-
-        workManager.cancelAllWork();
-        initWorker()
-
         lifecycleScope.launch {
             binding.start.isGone = db.getCount() > 0L
             binding.active.isVisible = db.getCount() > 0L
