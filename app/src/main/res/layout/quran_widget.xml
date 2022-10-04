@@ -18,9 +18,9 @@
         android:layout_margin="12dp"
         android:background="@drawable/rounded_back"
         android:gravity="center"
+        android:text="lpd"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:text="lpd"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,15 +34,11 @@
         android:ellipsize="end"
         android:gravity="center"
         android:padding="8dp"
+        android:text="dalsp[dlaps["
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:text="dalsp[dlaps["
         android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_text" />
+        android:textStyle="bold" />
 
 
 </LinearLayout>

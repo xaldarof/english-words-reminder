@@ -1,13 +1,18 @@
 package xaldarof.dictionary.english.service
 
 import android.app.NotificationManager
+import android.appwidget.AppWidgetManager
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.widget.RemoteViews
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import xaldarof.dictionary.english.R
 import xaldarof.dictionary.english.data.AppDatabase
+
 
 class ActivityReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
@@ -33,5 +38,6 @@ class ActivityReceiver : BroadcastReceiver() {
                 }
             }
         }
+
     }
 }
