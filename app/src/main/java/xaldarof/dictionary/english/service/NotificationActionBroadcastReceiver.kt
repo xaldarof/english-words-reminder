@@ -8,38 +8,39 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import xaldarof.dictionary.english.data.database.AppDatabase
 import xaldarof.dictionary.english.domain.repositories.WordsRepository
 import javax.inject.Inject
 
 
+abstract class DaggerBroadcastReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {}
+}
+
 @AndroidEntryPoint
-class NotificationActionBroadcastReceiver : BroadcastReceiver() {
+class NotificationActionBroadcastReceiver : DaggerBroadcastReceiver() {
 
     @Inject
     lateinit var repository: WordsRepository
 
-    override fun onReceive(p0: Context?, p1: Intent?) {
-        if (p1?.getStringExtra("seen") == "seen") {
-            if (p0 != null) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    repository.clearUnSeenWords()
-                    val notificationManager =
-                        p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.cancel(123)
-                }
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.getStringExtra("seen") == "seen") {
+            CoroutineScope(Dispatchers.IO).launch {
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(123)
+                repository.clearUnSeenWords()
             }
         }
 
-        if (p1?.getStringExtra("know") == "know") {
-            if (p0 != null) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    repository.updateKnow(p1.getStringExtra("body")!!)
-                    repository.clearUnSeenWords()
-                    val notificationManager =
-                        p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.cancel(123)
-                }
+        if (intent.getStringExtra("know") == "know") {
+            CoroutineScope(Dispatchers.IO).launch {
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(123)
+                repository.updateKnow(intent.getStringExtra("body")!!)
+                repository.clearUnSeenWords()
+
             }
         }
 

@@ -4,6 +4,7 @@
     package="xaldarof.dictionary.english">
 
     <application
+        android:name=".core.English"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,7 +25,7 @@
         </activity>
 
         <receiver
-            android:name=".service.WordWidget"
+            android:name=".widgets.WordWidget"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

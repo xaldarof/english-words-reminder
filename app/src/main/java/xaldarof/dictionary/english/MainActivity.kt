@@ -15,9 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import xaldarof.dictionary.english.data.database.AppDatabase
 import xaldarof.dictionary.english.databinding.ActivityMainBinding
-import xaldarof.dictionary.english.domain.models.WordEntity
 import xaldarof.dictionary.english.domain.repositories.WordsRepository
 import xaldarof.dictionary.english.service.Worker
 import xaldarof.dictionary.english.tools.clearTrash
