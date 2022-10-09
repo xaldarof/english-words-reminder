@@ -32,6 +32,7 @@ class ActivityReceiver : BroadcastReceiver() {
                 CoroutineScope(Dispatchers.IO).launch {
                     AppDatabase.getDatabase(p0).getWordsDao()
                         .updateKnow(p1.getStringExtra("body")!!)
+                    AppDatabase.getDatabase(p0).getWordsDao().clearUnSeenWords()
                     val notificationManager =
                         p0.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     notificationManager.cancel(123)
