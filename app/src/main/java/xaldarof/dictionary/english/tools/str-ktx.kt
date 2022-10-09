@@ -1,9 +1,21 @@
 package xaldarof.dictionary.english.tools
 
-fun String.clearTrash():String {
-    return replace("_n.", "").replace(">", ": ")
-        .replace("_фр.", "").replace("_а.", "").replace("_a.", "")
-        .replaceFirst("_бот.", "")
-        .replaceFirst("1.", "")
-        .replace("_жд.", "")
+import xaldarof.dictionary.english.domain.models.WordEntity
+
+
+suspend fun String.clearTrash(wordEntity: suspend (WordEntity) -> Unit) {
+    if (contains("]") || contains("[")) {
+        val startIndex = indexOf("[")
+        val endIndex = indexOf("]")
+
+        val withoutBreak = replaceRange(
+            startIndex,
+            endIndex + 1,
+            " - "
+        ).replace("_", "")
+
+        wordEntity.invoke(WordEntity(
+            withoutBreak, false
+        ))
+    }
 }

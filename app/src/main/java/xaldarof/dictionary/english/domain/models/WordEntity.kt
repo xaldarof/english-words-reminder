@@ -1,4 +1,4 @@
-package xaldarof.dictionary.english.domain
+package xaldarof.dictionary.english.domain.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

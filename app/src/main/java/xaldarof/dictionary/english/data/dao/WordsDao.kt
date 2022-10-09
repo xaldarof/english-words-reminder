@@ -1,11 +1,11 @@
-package xaldarof.dictionary.english.data
+package xaldarof.dictionary.english.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import xaldarof.dictionary.english.domain.UnSeenWordEntity
-import xaldarof.dictionary.english.domain.WordEntity
+import xaldarof.dictionary.english.domain.models.UnSeenWordEntity
+import xaldarof.dictionary.english.domain.models.WordEntity
 
 @Dao
 interface WordsDao {

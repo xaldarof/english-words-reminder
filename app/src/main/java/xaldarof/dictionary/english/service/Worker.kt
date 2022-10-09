@@ -1,7 +1,6 @@
 package xaldarof.dictionary.english.service
 
 import android.annotation.SuppressLint
-import android.app.Notification
 import android.app.Notification.FLAG_AUTO_CANCEL
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,10 +17,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import xaldarof.dictionary.english.MainActivity
 import xaldarof.dictionary.english.R
-import xaldarof.dictionary.english.data.AppDatabase
-import xaldarof.dictionary.english.domain.UnSeenWordEntity
+import xaldarof.dictionary.english.data.database.AppDatabase
+import xaldarof.dictionary.english.domain.models.UnSeenWordEntity
 
-class AppWorker(private val context: Context, workerParameters: WorkerParameters) :
+class Worker(private val context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
 
 
@@ -50,7 +49,7 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("WrongConstant")
     private fun showNotification(body: String) {
-        val broadCastIntent = Intent(context, ActivityReceiver::class.java)
+        val broadCastIntent = Intent(context, NotificationActionBroadcastReceiver::class.java)
         broadCastIntent.putExtra("seen", "seen")
 
         val deletePendingIntent = PendingIntent.getBroadcast(
@@ -60,7 +59,7 @@ class AppWorker(private val context: Context, workerParameters: WorkerParameters
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE or FLAG_AUTO_CANCEL
         )
 
-        val broadCastIntentKnow = Intent(context, ActivityReceiver::class.java)
+        val broadCastIntentKnow = Intent(context, NotificationActionBroadcastReceiver::class.java)
         broadCastIntentKnow.putExtra("know", "know")
         broadCastIntentKnow.putExtra("body", body)
 

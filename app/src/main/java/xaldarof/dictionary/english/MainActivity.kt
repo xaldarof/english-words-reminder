@@ -11,19 +11,29 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import xaldarof.dictionary.english.data.AppDatabase
+import xaldarof.dictionary.english.data.database.AppDatabase
 import xaldarof.dictionary.english.databinding.ActivityMainBinding
-import xaldarof.dictionary.english.domain.WordEntity
-import xaldarof.dictionary.english.service.AppWorker
+import xaldarof.dictionary.english.domain.models.WordEntity
+import xaldarof.dictionary.english.domain.repositories.WordsRepository
+import xaldarof.dictionary.english.service.Worker
+import xaldarof.dictionary.english.tools.clearTrash
+import xaldarof.dictionary.english.tools.fileName
+import xaldarof.dictionary.english.tools.workerTag
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val workManager = WorkManager.getInstance(this)
+
+    @Inject
+    lateinit var repository: WordsRepository
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,42 +41,45 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
-        val db = AppDatabase.getDatabase(this@MainActivity).getWordsDao()
+        checkAppState()
+        handleClicks()
 
+    }
+
+    private fun checkAppState() {
         lifecycleScope.launch {
-            binding.start.isGone = db.getCount() > 0L
-            binding.active.isVisible = db.getCount() > 0L
+            binding.start.isGone = repository.getCount() > 0L
+            binding.active.isVisible = repository.getCount() > 0L
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun handleClicks() {
         binding.start.setOnClickListener {
-            binding.progress.visibility = View.VISIBLE
-            binding.start.visibility = View.GONE
-            Thread {
-                val fileName = "eng-rus.txt"
-                application.assets.open(fileName).bufferedReader().use {
-                    it.lines().forEach { line ->
-                        CoroutineScope(Dispatchers.IO).launch {
-                            if (line.contains("]") || line.contains("[")) {
-                                val startIndex = line.indexOf("[")
-                                val endIndex = line.indexOf("]")
+            hideViews()
+            startCaching()
+        }
+    }
 
-                                val withoutBreak = line.replaceRange(
-                                    startIndex,
-                                    endIndex + 1,
-                                    " - "
-                                )
-
-                                db.insertWord(
-                                    WordEntity(
-                                        withoutBreak, false
-                                    )
-                                )
-                            }
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun startCaching() {
+        Thread {
+            application.assets.open(fileName).bufferedReader().use {
+                it.lines().forEach { line ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        line.clearTrash { word ->
+                            repository.insertWord(word)
                         }
                     }
                 }
-                updateViews()
-            }.start()
-        }
+            }
+            updateViews()
+        }.start()
+    }
+
+    private fun hideViews() {
+        binding.progress.visibility = View.VISIBLE
+        binding.start.visibility = View.GONE
     }
 
     private fun updateViews() {
@@ -79,9 +92,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initWorker() {
-        val work = PeriodicWorkRequest.Builder(AppWorker::class.java, 30, TimeUnit.MINUTES)
+        val work = PeriodicWorkRequest.Builder(Worker::class.java, 30, TimeUnit.MINUTES)
             .build()
 
-        workManager.enqueueUniquePeriodicWork("tag", ExistingPeriodicWorkPolicy.KEEP, work)
+        workManager.enqueueUniquePeriodicWork(workerTag,
+            ExistingPeriodicWorkPolicy.KEEP,
+            work)
     }
 }

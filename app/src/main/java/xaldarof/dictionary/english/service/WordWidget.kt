@@ -6,18 +6,14 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
-import android.provider.CalendarContract
-import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import xaldarof.dictionary.english.R
-import xaldarof.dictionary.english.data.AppDatabase
-import xaldarof.dictionary.english.domain.UnSeenWordEntity
+import xaldarof.dictionary.english.data.database.AppDatabase
 
 class WordWidget : AppWidgetProvider() {
     @RequiresApi(Build.VERSION_CODES.M)

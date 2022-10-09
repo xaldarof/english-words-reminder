@@ -36,6 +36,6 @@
                 android:resource="@xml/widget" />
         </receiver>
 
-        <receiver android:name=".service.ActivityReceiver" />
+        <receiver android:name=".service.NotificationActionBroadcastReceiver" />
     </application>
 </manifest>
